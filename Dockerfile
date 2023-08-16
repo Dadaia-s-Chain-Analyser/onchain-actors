@@ -16,6 +16,8 @@ RUN npm install -g ganache-cli
 RUN brownie pm install uniswap/v2-periphery@1.0.0-beta.0
 RUN brownie pm install uniswap/v2-core@1.0.1
 
+RUN brownie pm install aave/aave-v3-core@1.16.2
+
 COPY ./src .
 
 RUN brownie compile

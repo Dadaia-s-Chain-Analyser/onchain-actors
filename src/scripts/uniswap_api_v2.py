@@ -17,6 +17,12 @@ def swap_exact_eth_amount_for_token(amount_in, token_out):
     amount_out_min = 1
     tx = UniswapV2DMTransact[-1].swapExactETHForTokens(token_out, amount_out_min, {"from": user_account, "value": amount_in})
 
+# swap_exact_eth_amount_for_token(amount_in, token_out)
+# swap_exact_token_amount_for_eth(amount_in, token_in)
+# swap_eth_for_exact_token_amount(amount_out, token_out)
+# swap_token_for_exact_eth_amount(amount_out, token_in)
+# swap_exact_token_amount_for_token(amount_in, token_in, token_out)
+# swap_token_for_exact_token_amount(amount_out, token_in, token_out)
 
 def swap_exact_token_amount_for_eth(amount_in, token_in):
     """ METHOD: swap_exact_token_amount_for_eth

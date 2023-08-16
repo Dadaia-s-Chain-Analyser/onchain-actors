@@ -1,27 +1,34 @@
 import os
-from kafka import KafkaConsumer
-import logging
-from subprocess import Popen
+from scripts.apis.queue_api import QueueAPI
+from azure.core.credentials import AzureNamedKeyCredential
+from dotenv import load_dotenv
 
-logging.basicConfig(level='INFO')
+load_dotenv()
 
-def run_concurrently(commands_list):
-    procs = [ Popen(i) for i in commands_list ]
-    for p in procs:
-        p.wait()
-    return
+storage_account_name = os.getenv("STORAGE_ACCOUNT_NAME")
+storage_key = os.getenv("STORAGE_KEY")
+queue_name = os.getenv("QUEUE_NAME")      
 
 
-def get_kafka_consumer(topic, group_id, auto_offset_reset='latest'):
-    host = os.environ['KAFKA_HOST'].split(",")
-    return KafkaConsumer(topic, bootstrap_servers=host,
-                        auto_offset_reset=auto_offset_reset, group_id=group_id)
+credential = AzureNamedKeyCredential(storage_account_name, storage_key)
+api_queue = QueueAPI(storage_account_name, credential, queue_name)
+
+msg = api_queue.receive_message()
+
+import asyncio
+
+async def execute_command(command):
+    proc = await asyncio.create_subprocess_shell(
+        command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE)
+
+    stdout, stderr = await proc.communicate()
+
+    print(f'stdout: {stdout.decode()}')
+    print(f'stderr: {stderr.decode()}')
 
 
-if __name__ == '__main__':
-    topic_listened = os.environ["TOPIC_EXECUTORS"]
-    consumer_group = os.environ["CONSUMER_GROUP"]
-    onchain_actor_consumer = get_kafka_consumer(topic_listened, consumer_group)
-    for msg in onchain_actor_consumer:
-        command = [msg.value.decode('utf-8').replace('"',  "").split(" ")]
-        run_concurrently(command)
+for command in msg:
+    print(command)
+    asyncio.run(execute_command(command))

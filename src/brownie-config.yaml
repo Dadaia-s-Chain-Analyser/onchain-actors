@@ -3,6 +3,8 @@ dependencies:
   - uniswap/v2-periphery@1.0.0-beta.0
   - uniswap/v3-periphery@1.3.0
   - uniswap/v3-core@1.0.0
+  - aave/protocol-v2@1.0.1
+  - aave/aave-v3-core@1.16.2
 
 compiler:
   solc:
@@ -11,9 +13,14 @@ compiler:
       - '@uniswap=uniswap/v2-periphery@1.0.0-beta.0'
       - '@uniswap_v3_core=uniswap/v3-core@1.0.0'
       - '@uniswap_v3_periphery=uniswap/v3-periphery@1.3.0'
+      - '@aave=aave/protocol-v2@1.0.1'
+      - '@aave=aave/aave-v3-core@1.16.2'
 
 dotenv: .env
 
+settings:
+  gas_limit: '100000000000'
+  
 networks:
   default: development
 
@@ -43,7 +50,7 @@ networks:
     uniswapV3Router: '0xE592427A0AEce92De3Edee1F18E0157C05861564'
     uniswapV3Factory: '0x1F98431c8aD98523631AE4a59f267346ea31F984'
     lendingPoolAddressProvider: '0x5E52dEc931FFb32f609681B8438A51c675cc232d'
-    poolAdressesProvider: '0xc4dCB5126a3AfEd129BC3668Ea19285A9f56D15D'
+    poolAdressesProvider: '0xC911B590248d127aD18546B186cC6B324e99F02c'
     verify: True
 
 

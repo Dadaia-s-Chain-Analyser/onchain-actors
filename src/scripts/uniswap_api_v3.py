@@ -19,12 +19,14 @@ def unwrap_native_token(amount):
 
 def swap_exact_input_single(amount_in, token_in, token_out, fee):
     customer = get_account()
+    amount_out_min = 1
     interface.IERC20(token_in).approve(UniswapV3DMTransact[-1].address, amount_in, {"from": customer})
-    tx = UniswapV3DMTransact[-1].swapExactInputSingle(amount_in, token_in, token_out, fee, {"from": customer})
+    tx = UniswapV3DMTransact[-1].swapExactInputSingle(amount_in, amount_out_min , token_in, token_out, fee, {"from": customer})
 
 
-def swap_exact_output_single(amount_out, token_in, token_out, amount_in_max, fee):
+def swap_exact_output_single(amount_out, token_in, token_out, fee):
     customer = get_account()
+    amount_in_max = 1
     interface.IERC20(token_in).approve(UniswapV3DMTransact[-1].address, amount_in_max, {"from": customer})
     tx = UniswapV3DMTransact[-1].swapExactOutputSingle(amount_out, amount_in_max, token_in, token_out, fee, {"from": customer})
 
