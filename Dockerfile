@@ -20,6 +20,6 @@ RUN brownie pm install aave/aave-v3-core@1.16.2
 
 COPY ./src .
 
-RUN brownie compile
+#RUN brownie compile
 
 ENTRYPOINT [ "sleep", "infinity" ]

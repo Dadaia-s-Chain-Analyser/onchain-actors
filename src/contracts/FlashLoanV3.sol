@@ -6,13 +6,35 @@ import {IPoolAddressesProvider} from "@aave/contracts/interfaces/IPoolAddressesP
 import {IERC20} from "@aave/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
 
+interface IDex {
+    function depositUSDC(uint256 _amount) external;
+
+    function depositDAI(uint256 _amount) external;
+
+    function buyDAI() external;
+
+    function sellDAI() external;
+}
+
 
 contract FlashLoan is FlashLoanSimpleReceiverBase {
 
     address payable owner;
 
+    // Aave ERC20 Token addresses on Goerli network
+    address private immutable daiAddress = 0xDF1742fE5b0bFc12331D8EAec6b478DfDbD31464;
+    address private immutable usdcAddress =  0xA2025B15a1757311bfD68cb14eaeFCc237AF5b43;
+    address private dexContractAddress = 0xD6e8c479B6B62d8Ce985C0f686D39e96af9424df;
+
+    IERC20 private dai;
+    IERC20 private usdc;
+    IDex private dexContract;
+
     constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
         owner = payable(msg.sender);
+        dai = IERC20(daiAddress);
+        usdc = IERC20(usdcAddress);
+        dexContract = IDex(dexContractAddress);
     }
 
     function executeOperation(
@@ -22,6 +44,14 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
         address initiator,
         bytes calldata params
     ) external override returns (bool) {
+
+
+        // Arbirtage operation
+        dexContract.depositUSDC(1000000000); // 1000 USDC
+        dexContract.buyDAI();
+        dexContract.depositDAI(dai.balanceOf(address(this)));
+        dexContract.sellDAI();
+
 
         uint256 amountOwed = amount + premium;
         IERC20(asset).approve(address(POOL), amountOwed);
@@ -46,6 +76,24 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
         );
     }
 
+
+    function approveUSDC(uint256 _amount) external returns (bool) {
+        return usdc.approve(dexContractAddress, _amount);
+    }
+
+    function allowanceUSDC() external view returns (uint256) {
+        return usdc.allowance(address(this), dexContractAddress);
+    }
+
+    function approveDAI(uint256 _amount) external returns (bool) {
+        return dai.approve(dexContractAddress, _amount);
+    }
+
+    function allowanceDAI() external view returns (uint256) {
+        return dai.allowance(address(this), dexContractAddress);
+    }
+
+    
     function getBalance(address _tokenAddress) public view returns (uint256) {
         return IERC20(_tokenAddress).balanceOf(address(this));
     }

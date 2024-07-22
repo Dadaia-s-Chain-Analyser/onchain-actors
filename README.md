@@ -111,3 +111,21 @@ brownie run scripts/uniswap_api_v3.py swap_exact_input_single "amount_in" "addre
 Example: Swaping AMOUNT of WETH to get 1000000000000000000 UNI Tokens. The Amount_in_max parameter is used to secure that because of slippage the transaction will fail if a high input is required to return that amount of tokens.
 
     brownie run scripts/uniswap_api_v3.py swap_exact_output_single 1000000000000000000  0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6 0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984 1000000000000000000 3000 --network goerli
+
+
+
+# TODO LIST for onchain actors
+    
+    
+    - Fechar testes de integração de UNISWAP V2
+    - Fechar testes unitários de UNISWAP V2 (Formato)
+    - Documentar no README sobre UNISWAP V2
+    Executar na mainnet-fork
+
+    - Fechar testes de integração de UNISWAP V3
+    - Fechar testes unitários de UNISWAP V3 (Formato)
+    - Documentar no README sobre UNISWAP V3
+    - Descobrir como ler em tempo real oracles dentro de contratos para estipular quantidades hoje fixas
+    - Fazer fork da polygon main
+
+##
